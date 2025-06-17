@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Salary Predictor</title>
+</head>
+<body>
+  <h2>Salary Prediction Tool</h2>
+  <form id="predictForm">
+    <label>Working:
+      <input type="checkbox" id="working" />
+    </label><br />
+
+    <label>Relevant Degree:
+      <input type="checkbox" id="relevant_degree" />
+    </label><br />
+
+    <label>DS Projects:
+      <input type="checkbox" id="ds_projects" />
+    </label><br />
+
+    <label>Skills Rating (1-5):
+      <input type="number" id="skills_rating" min="1" max="5" />
+    </label><br />
+
+    <label>College Tier:
+      <select id="college_tier">
+        <option value="tier1">Tier 1</option>
+        <option value="tier2">Tier 2</option>
+        <option value="tier3">Tier 3</option>
+      </select>
+    </label><br />
+
+    <label>Certifications:
+      <input type="checkbox" id="certifications" />
+    </label><br />
+
+    <label>Location:
+      <select id="location">
+        <option value="metro">Metro</option>
+        <option value="non-metro">Non-Metro</option>
+      </select>
+    </label><br />
+
+    <label>Domain:
+      <select id="domain">
+        <option value="tech">Tech</option>
+        <option value="bfsi">BFSI</option>
+        <option value="other">Other</option>
+      </select>
+    </label><br />
+
+    <label>Current Company:
+      <select id="current_company">
+        <option value="">None</option>
+        <option value="top_mnc">Top MNC</option>
+        <option value="startup">Startup</option>
+        <option value="service_small">Service/Small</option>
+      </select>
+    </label><br />
+
+    <label>Data Related:
+      <input type="checkbox" id="data_related" />
+    </label><br />
+
+    <label>Years of Experience:
+      <input type="number" id="yo_experience" min="0" />
+    </label><br />
+
+    <label>Interested in DS:
+      <input type="checkbox" id="interested_in_ds" />
+    </label><br />
+
+    <button type="submit">Predict</button>
+  </form>
+
+  <h3>Prediction:</h3>
+  <pre id="result"></pre>
+
+  <script>
+    document.getElementById("predictForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const payload = {
+        working: document.getElementById("working").checked,
+        relevant_degree: document.getElementById("relevant_degree").checked || false,
+        ds_projects: document.getElementById("ds_projects").checked || false,
+        skills_rating: parseInt(document.getElementById("skills_rating").value),
+        college_tier: document.getElementById("college_tier").value,
+        certifications: document.getElementById("certifications").checked || false,
+        location: document.getElementById("location").value,
+        domain: document.getElementById("domain").value,
+        current_company: document.getElementById("current_company").value || null,
+        data_related: document.getElementById("data_related").checked || false,
+        yo_experience: parseInt(document.getElementById("yo_experience").value),
+        interested_in_ds: document.getElementById("interested_in_ds").checked || false
+      };
+
+      const res = await fetch("http://localhost:8000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+    });
+  </script>
+</body>
+</html>
